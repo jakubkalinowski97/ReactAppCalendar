@@ -1,0 +1,187 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.calendar{
+    width: 910px;
+    display: flex;
+    flex-direction: row;
+}
+
+header{
+    width: 800px;
+    height: 160px;
+    background: #123D56;
+    font-size: 25px;
+    justify-content: center;
+
+}
+
+.header-month{
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #6B8EA3;
+    padding: 0 20px 0 20px;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.day{
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    width: calc(1/7*800px);
+    height: 80px;
+    background: #27546F;
+    font-size: 18px;
+    justify-content: center;
+    border: 1px solid black;
+    color: #6B8EA3;
+}
+
+.different-month{
+    color: #446F88;
+}
+
+.today{
+    background: #446F88;
+}
+
+.selected{
+    background: #03263B;
+    transition: .3s;
+}
+
+.hide{
+    display: none;
+}
+
+.day-input{
+    width: 30px;
+    height: 10px;
+}
+
+.day-no{
+    position: absolute;
+    top: 5%;
+    left: 5%;
+}
+
+.task-list{
+    color: #334251;
+    position: absolute;
+    top: 30%;
+    left: 5%;
+    right: 5%;
+    list-style: none;
+}
+
+.birthday{
+}
+.birthday::before {
+    position: relative;
+    top: 3px;
+    content: "• ";
+    color: #6d6866;
+    font-size: 25px;
+}
+
+.meeting{
+}
+.meeting::before {
+    position: relative;
+    top: 3px;
+    content: "• ";
+    color: #6d6866;
+    font-size: 25px;
+}
+
+.trips{
+}
+.trips::before {
+    position: relative;
+    top: 3px;
+    content: "• ";
+    color: #4f745e;
+    font-size: 25px;
+}
+
+.other{
+}
+.other::before {
+    position: relative;
+    top: 3px;
+    content: "• ";
+    color: #818656;
+    font-size: 25px;
+}
+
+li{
+    margin-bottom: 3px;
+    padding: 0 5px 0 5px;
+    border-radius: 5px;
+    color: #6B8EA3;
+}
+
+.form-add-task{
+    display: flex;
+    flex-direction: column;
+    height: 560px;
+    width: 300px;
+    padding: 10px;
+    margin-left: 10px;
+    background-color: #123D56;
+    color: #6B8EA3;
+}
+
+.form-header{
+    font-size: 20px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input,
+select,
+button{
+    padding: 5px;
+    margin: 10px;
+    border-radius: 5px;
+    color: #6B8EA3;
+    font-size: 15px;
+}
+::placeholder{
+    color: #6B8EA3;
+}
+
+input,
+select{
+    background-color: #123D56;
+    border-top: 2px solid #03263B;
+    border-left: 2px solid #03263B;
+    border-bottom: 2px solid #27546F;
+    border-right: 2px solid #27546F;
+}
+
+button{
+    background-color: #446F88;
+    color: #03263B;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: .3s;
+}
+
+button:hover{
+    background-color: #6B8EA3;
+}
+
+
+
