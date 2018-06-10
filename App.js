@@ -403,7 +403,7 @@ class DetailsOfTheDay extends Component{
 
     handleDeleteTask(id){
         for(let i = 0; i < this.props.addedTask.length; i++) {
-            if(this.props.addedTask[i].id == id){
+            if(this.props.addedTask[i].id === id){
                 this.props.addedTask.splice(i, 1);
                 break;
             }
@@ -429,7 +429,7 @@ class DetailsOfTheDay extends Component{
             (task.type === "trips" ? "trips" : "")+
             (task.type === "meeting" ? "meeting" : "")+
             (task.type === "other" ? "other" : "")
-        }>{task.text}, {task.person} {task.start} - {task.end} <i class="far fa-trash-alt"></i> <a href="#" onClick={() => this.handleDeleteTask(task.id)}> USUŃ! </a></li>);
+        }>{task.text}, {task.person} {task.start} - {task.end} <button type="button" onClick={() => this.handleDeleteTask(task.id)}><i className="far fa-trash-alt">Usuń!</i> </button></li>);
 
 
         return (
