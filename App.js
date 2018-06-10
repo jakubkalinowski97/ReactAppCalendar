@@ -267,7 +267,7 @@ class Day extends React.Component {
 const Authors = () =>(
     <div>
         <h4>Jakub Kalinowski</h4>
-        <h4git >Mateusz Bednarski</h4git>
+        <h4>Mateusz Bednarski</h4>
     </div>
 )
 
