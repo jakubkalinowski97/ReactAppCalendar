@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import moment from 'moment'
 import './App.css';
+import {
+    BrowserRouter as Router,
+    Route,
+    Link
+} from 'react-router-dom'
 
 class Calendar extends Component{
     constructor(props){
@@ -23,7 +28,6 @@ class Calendar extends Component{
                 addedTasks: prevState.addedTasks.concat(newTask),
             };
         });
-        console.log(this.state.addedTasks);
 
     }
 
@@ -80,6 +84,7 @@ class Calendar extends Component{
         let date = this.state.month.clone().startOf("month").add("w" -1).day("Sunday");
         let count = 0;
         let monthIndex = date.month();
+        let idWeek = 0
 
         const {
             month,
@@ -89,6 +94,7 @@ class Calendar extends Component{
         while (!done) {
             weeks.push(
                 <Week
+                    key={idWeek}
                     addingTasks={addingTasks}
                     date={date.clone()}
                     month={month}
@@ -98,6 +104,7 @@ class Calendar extends Component{
             date.add(1, "w");
             done = count++ > 3 && monthIndex !== date.month();
             monthIndex = date.month();
+            idWeek++;
         }
 
         return weeks;
@@ -145,6 +152,7 @@ class Calendar extends Component{
                 </section>
                 <DailyTODO handleAddingTask={this.onAddingTasks.bind(this)}
                            addedTask={this.state.addedTasks} selectedDay={this.state.selectedDay}/>
+                <DetailsOfTheDay addedTask={this.state.addedTasks} selectedDay={this.state.selectedDay}/>
             </div>
         );
     }
@@ -159,6 +167,7 @@ class Week extends Component{
 
     render(){
 
+        let idDay = 0;
         let days = [];
         let {
             date
@@ -179,7 +188,9 @@ class Week extends Component{
                 date: date
             };
             days.push(
-                <Day day={day}
+                <Day
+                     key={idDay}
+                     day={day}
                      month={month}
                      selectedDay={selectedDay}
                      selectDay={selectDay}
@@ -189,6 +200,7 @@ class Week extends Component{
 
             date = date.clone();
             date.add(1, "day");
+            idDay++;
         }
 
         return (
@@ -223,7 +235,7 @@ class Day extends React.Component {
 
         let filteredList = addedTasks.filter((task) => task.date.format("DD MM YYYY") === day.date.format("DD MM YYYY"));
 
-        let listTasks = filteredList.map((task) => <li className={
+        let listTasks = filteredList.map((task) => <li key={task.id} className={
             (task.type === "birthday" ? "birthday" : "")+
             (task.type === "trips" ? "trips" : "")+
             (task.type === "meeting" ? "meeting" : "")+
@@ -240,7 +252,7 @@ class Day extends React.Component {
             </span>
                 <ul className={"task-list"}>{listTasks}</ul>
             </div>
-            )
+        )
     }
 
     render() {
@@ -252,6 +264,21 @@ class Day extends React.Component {
 
 }
 
+const Authors = () =>(
+    <div>
+        <h4>Jakub Kalinowski</h4>
+        <h4>Mateusz Bednarski</h4>
+    </div>
+)
+
+const Home = () =>(
+    <div>
+        <p>Cool calendar with events, category events, daily view :)</p>
+    </div>
+)
+
+
+
 class DailyTODO extends Component{
     constructor(props){
         super(props);
@@ -259,9 +286,11 @@ class DailyTODO extends Component{
         this.state = {
             items: [],
             selectedDay: props.selectedDay,
-            newTask: {}
+            newTask: {},
+            idTask: 0
         }
     }
+
 
     handleChange(newTask){
         this.props.handleAddingTask(newTask);
@@ -273,6 +302,29 @@ class DailyTODO extends Component{
             {selectedDay: props.selectedDay});
     }
 
+    validationForm(newTask){
+
+        let regex = /^[a-zA-Z]+$/;
+
+        if((newTask.text ==='')||(newTask.text === null)){
+            alert("Description task must be filled out.");
+            return false;
+        }
+        if((newTask.person === '')||(newTask.person === null)){
+            alert("Name person must be filled out.");
+            return false;
+        }
+        if(regex.test(newTask.person)===false){
+            alert("Name person must be only letters.");
+            return false;
+        }
+        if(newTask.start.value>newTask.end.value){
+            alert("Wrong date.");
+            return false;
+        }
+        return true;
+    }
+
     addItem(e, selectedDay) {
         if (this._inputTask.value !== "") {
             var newTask = {
@@ -280,20 +332,31 @@ class DailyTODO extends Component{
                 person: this._inputPerson.value,
                 date: selectedDay,
                 type: this._selectType.value,
-                key: Date.now()
+                key: Date.now(),
+                start: this._inputStart.value,
+                end: this._inputEnd.value,
+                id: this.state.idTask
             };
 
-            this.setState((prevState) => {
-                return {
-                    items: prevState.items.concat(newTask),
-                    newTask: newTask
-                };
-            });
-            this.handleChange(newTask);
-            this._inputTask.value = "";
-            this._inputPerson.value = "";
+            if(this.validationForm(newTask)){
+                this.setState((prevState) => {
+                    return {
+                        items: prevState.items.concat(newTask),
+                        newTask: newTask
+                    };
+                });
+                this.handleChange(newTask);
+                this._inputTask.value = "";
+                this._inputPerson.value = "";
+                this._inputStart.value = "";
+                this._inputEnd.value = "";
+                this.setState((prevState) => {
+                    return {
+                        idTask: prevState.idTask + 1,
+                    };
+                });
+            }
         }
-
         e.preventDefault();
     }
 
@@ -303,12 +366,14 @@ class DailyTODO extends Component{
                 <div>
                     <form className={"form-add-task"} onSubmit={this.addItem}>
                         <span className={"form-header"}>{this.state.selectedDay.format("DD MMMM YYYY")}</span>
-                        <input ref={(a) => this._inputTask = a}
+                        <input ref={(a) => this._inputTask = a} required
                                placeholder="Task">
                         </input>
-                        <input ref={(a) => this._inputPerson = a}
+                        <input ref={(a) => this._inputPerson = a} required
                                placeholder="Person">
                         </input>
+                        <input ref={(a) => this._inputStart = a} required type="time"></input>
+                        <input ref={(a) => this._inputEnd = a} required type="time"></input>
                         <select ref={(a) => this._selectType = a}>
                             <option defaultValue={"meeting"} value="meeting">Meeting</option>
                             <option value="trips">Trips</option>
@@ -316,6 +381,16 @@ class DailyTODO extends Component{
                             <option value="other">Other</option>
                         </select>
                         <button type="submit">Add!</button>
+                        <Router>
+                            <div className={"routing"}>
+                                <Route exact path="/authors" component={Authors} />
+                                <Route path="/home" component={Home} />
+                                <ul className={"routing-list"}>
+                                    <li><Link to="/authors">Authors</Link></li>
+                                    <li><Link to="/home">Home</Link></li>
+                                </ul>
+                            </div>
+                        </Router>
                     </form>
                 </div>
             </div>
@@ -323,6 +398,36 @@ class DailyTODO extends Component{
         );
     }
 }
+
+class DetailsOfTheDay extends Component{
+
+
+    render(){
+        const{
+            addedTask,
+            selectedDay
+        } = this.props;
+
+        let filteredList = addedTask.filter((task) => task.date.format("DD MM YYYY") === selectedDay.format("DD MM YYYY"));
+
+        let listTasks = filteredList.map((task) => <li key={task.id} className={
+            (task.type === "birthday" ? "birthday" : "")+
+            (task.type === "trips" ? "trips" : "")+
+            (task.type === "meeting" ? "meeting" : "")+
+            (task.type === "other" ? "other" : "")
+        }>{task.text}, {task.person} {task.start} - {task.end}</li>);
+
+
+        return (
+            <div className={"day-details"}>
+                <ul >{listTasks}</ul>
+            </div>
+        )
+    }
+}
+
+
+
 
 
 

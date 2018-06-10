@@ -5,7 +5,7 @@
 }
 
 .calendar{
-    width: 910px;
+    width: 100%;
     display: flex;
     flex-direction: row;
 }
@@ -82,6 +82,12 @@ header{
     left: 5%;
     right: 5%;
     list-style: none;
+}
+.task-list:hover{
+    background: #03263B;
+    z-index: 10;
+    height: auto;
+    border-radius: 5px;
 }
 
 .birthday{
@@ -183,5 +189,35 @@ button:hover{
     background-color: #6B8EA3;
 }
 
+.day-details{
+    margin-left: 10px;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    height: 560px;
+    width: 300px;
+    background: #27546F;
+}
 
+.day-details>ul{
+    list-style: none;
+}
+
+.routing-list{
+    margin-top: 40px;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+.routing-list > a:link, a:visited{
+    color: #446F88;
+}
+
+.routing{
+    margin-top: 80px;
+    padding: 10px;
+}
 
