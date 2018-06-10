@@ -214,7 +214,7 @@ class Week extends Component{
 class Day extends React.Component {
 
     componentWillReceiveProps(newProps) {
-        this.setState({addedTask: newProps.addedTasks});
+        this.setState({addedTask: newProps.addedTasks, selectedDay: newProps.selectedDay});
     }
 
 
@@ -401,7 +401,21 @@ class DailyTODO extends Component{
 
 class DetailsOfTheDay extends Component{
 
+    handleDeleteTask(id){
+        for(let i = 0; i < this.props.addedTask.length; i++) {
+            if(this.props.addedTask[i].id == id){
+                this.props.addedTask.splice(i, 1);
+                break;
+            }
+        }
+        this.setState({addedTask: this.props.addedTask});
+    }
 
+    componentWillReceiveProps(props) {
+        this.setState(
+            {selectedDay: props.selectedDay});
+    }
+    
     render(){
         const{
             addedTask,
@@ -415,12 +429,12 @@ class DetailsOfTheDay extends Component{
             (task.type === "trips" ? "trips" : "")+
             (task.type === "meeting" ? "meeting" : "")+
             (task.type === "other" ? "other" : "")
-        }>{task.text}, {task.person} {task.start} - {task.end}</li>);
+        }>{task.text}, {task.person} {task.start} - {task.end} <i class="far fa-trash-alt"></i> <a href="#" onClick={() => this.handleDeleteTask(task.id)}> USUŃ! </a></li>);
 
 
         return (
             <div className={"day-details"}>
-                <ul >{listTasks}</ul>
+                <ul>{listTasks}</ul>
             </div>
         )
     }
